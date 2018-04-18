@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title>首页</title>
+		<script type="text/javascript" src="js/common.js"></script>
+		<link href="css/mui.min.css" rel="stylesheet" />
+		<style>
+			html,
+			body {
+				background-color: #fff;
+			}
+		</style>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			123
+		</header>
+		<div class="mui-content mui-scroll-wrapper" id="indexContainer">
+			<div class="mui-scroll">
+				<!--这里放置真实显示的DOM内容-->
+				<grid></grid>
+			</div>
+		</div>
+
+		<script type="text/x-template" id="grid">
+			<div class="fourView">
+				<ul>
+					<li class="view_item" v-for="(item, key) in datas" :key="key">
+						<div class="view_item_icon">
+							<svg class="icon" aria-hidden="true">
+								<use xlink:href="#icon-gongjutai"></use>
+							</svg>
+						</div>
+						<div class="view_item_text">{{item.name}}</div>
+					</li>
+				</ul>
+			</div>
+		</script>
+		<script src="js/mui.min.js"></script>
+		<script src="js/util.js"></script>
+		<script type="text/javascript">
+			(function() {
+				mui.init({
+					swipeBack: true //启用右滑关闭功能
+				});
+				mui('.mui-scroll-wrapper').scroll({})
+				init()
+				mui.plusReady(function() {
+					// 创建子webview窗口 并初始化
+					var aniShow = {};
+					util.initSubpage(aniShow);
+
+					var nview = plus.nativeObj.View.getViewById('tabBar'),
+						activePage = plus.webview.currentWebview(),
+						targetPage,
+						subpages = util.options.subpages,
+						pageW = window.innerWidth,
+						currIndex = 0;
+
+					/**
+					 * 根据判断view控件点击位置判断切换的tab
+					 */
+					nview.addEventListener('click', function(e) {
+						var clientX = e.clientX;
+						if(clientX > 0 && clientX <= parseInt(pageW * 0.25)) {
+							currIndex = 0;
+						} else if(clientX > parseInt(pageW * 0.25) && clientX <= parseInt(pageW * 0.45)) {
+							currIndex = 1;
+						} else if(clientX > parseInt(pageW * 0.45) && clientX <= parseInt(pageW * 0.8)) {
+							currIndex = 2;
+						} else {
+							currIndex = 3;
+						}
+						// 匹配对应tab窗口	
+						if(currIndex > 0) {
+							targetPage = plus.webview.getWebviewById(subpages[currIndex - 1]);
+						} else {
+							targetPage = plus.webview.currentWebview();
+						}
+
+						if(targetPage == activePage) {
+							return;
+						}
+
+						//底部选项卡切换
+						util.toggleNview(currIndex);
+						// 子页面切换
+						util.changeSubpage(targetPage, activePage, aniShow);
+						//更新当前活跃的页面
+						activePage = targetPage;
+					});
+				});
+			})();
+			function init () {
+				Vue.component("grid", {
+					template: "#grid"
+				});
+				var vue = new Vue({
+					el: '#indexContainer',
+					data: {
+						datas: [{
+							name: 123
+						}, {
+							name: 123
+						}, {
+							name: 123
+						}, {
+							name: 123
+						}, {
+							name: 123
+						}, {
+							name: 123
+						}, {
+							name: 123
+						}, {
+							name: 123
+						}, {
+							name: 123
+						}, {
+							name: 123
+						}, {
+							name: 123
+						}]
+					}
+				})
+			}
+		</script>
+	</body>
+
+</html>
