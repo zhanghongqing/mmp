@@ -83,6 +83,18 @@
 				right: 0;
 				margin: -15px auto 0;
 			}
+			#indexPopover{
+				width: 100px;
+			}
+			#indexPopover .mui-table-view{
+				width: 100%;
+			}
+			.mui-table-view-cell a span{
+				display: inline-block;
+				width: 20px;
+				height: 20px;
+				font-size: 20px;
+			}
 		</style>
 	</head>
 
@@ -121,7 +133,7 @@
 		<script type="text/x-template" id="popoverCom">
 			<ul class="mui-table-view">
 				<li class="mui-table-view-cell" v-for="(item, index) in datas" :key="index">
-					<a href="#">item.name</a>
+					<a href="#"><span class="iconfont">{{item.icon}}</span>{{item.name}}</a>
 				</li>
 			</ul>
 		</script>

@@ -30,13 +30,168 @@ var util = {
 			name: '测试名称'
 		}],
 		indexPopData: [{
-			name: '测试'
+			name: '测试',
+			icon: '\ue6ad'
 		}, {
-			name: '测试'
+			name: '测试',
+			icon: '\ue6ad'
 		}, {
-			name: '测试'
+			name: '测试',
+			icon: '\ue6ad'
 		}, {
-			name: '测试'
+			name: '测试',
+			icon: '\ue6ad'
+		}],
+		lookMenuData: [{
+			title: '娱乐',
+			icon: '\ue6ad',
+			href: '#item1',
+			children: [{
+				name: '笑话大全',
+				icon: '#icon-icon-test',
+				url: ''
+			}, {
+				name: '笑话大全',
+				icon: '#icon-icon-test',
+				url: ''
+			}, {
+				name: '笑话大全',
+				icon: '#icon-youxi',
+				url: ''
+			}, {
+				name: '笑话大全',
+				icon: '#icon-youxi',
+				url: ''
+			}, {
+				name: '笑话大全',
+				icon: '#icon-youxi',
+				url: ''
+			}]
+		}, {
+			title: '新闻',
+			icon: '\ue6ad',
+			href: '#item2',
+			children: [{
+				name: '笑话大全',
+				icon: '#icon-youxi',
+				url: ''
+			}, {
+				name: '笑话大全',
+				icon: '#icon-youxi',
+				url: ''
+			}, {
+				name: '笑话大全',
+				icon: '#icon-youxi',
+				url: ''
+			}, {
+				name: '笑话大全',
+				icon: '#icon-youxi',
+				url: ''
+			}, {
+				name: '笑话大全',
+				icon: '#icon-youxi',
+				url: ''
+			}]
+		}, {
+			title: '音乐',
+			icon: '\ue6ad',
+			href: '#item3',
+			children: [{
+				name: '笑话大全',
+				icon: '#icon-youxi',
+				url: ''
+			}, {
+				name: '笑话大全',
+				icon: '#icon-youxi',
+				url: ''
+			}, {
+				name: '笑话大全',
+				icon: '#icon-youxi',
+				url: ''
+			}, {
+				name: '笑话大全',
+				icon: '#icon-youxi',
+				url: ''
+			}, {
+				name: '笑话大全',
+				icon: '#icon-youxi',
+				url: ''
+			}]
+		}, {
+			title: '视频',
+			icon: '\ue6ad',
+			href: '#item4',
+			children: [{
+				name: '笑话大全',
+				icon: '#icon-youxi',
+				url: ''
+			}, {
+				name: '笑话大全',
+				icon: '#icon-youxi',
+				url: ''
+			}, {
+				name: '笑话大全',
+				icon: '#icon-youxi',
+				url: ''
+			}, {
+				name: '笑话大全',
+				icon: '#icon-youxi',
+				url: ''
+			}, {
+				name: '笑话大全',
+				icon: '#icon-youxi',
+				url: ''
+			}]
+		}, {
+			title: '工具',
+			icon: '\ue6ad',
+			href: '#item5',
+			children: [{
+				name: '笑话大全',
+				icon: '#icon-youxi',
+				url: ''
+			}, {
+				name: '笑话大全',
+				icon: '#icon-youxi',
+				url: ''
+			}, {
+				name: '笑话大全',
+				icon: '#icon-youxi',
+				url: ''
+			}, {
+				name: '笑话大全',
+				icon: '#icon-youxi',
+				url: ''
+			}, {
+				name: '笑话大全',
+				icon: '#icon-youxi',
+				url: ''
+			}]
+		}, {
+			title: '其他',
+			icon: '\ue6ad',
+			href: '#item6',
+			children: [{
+				name: '笑话大全',
+				icon: '#icon-youxi',
+				url: ''
+			}, {
+				name: '笑话大全',
+				icon: '#icon-youxi',
+				url: ''
+			}, {
+				name: '笑话大全',
+				icon: '#icon-youxi',
+				url: ''
+			}, {
+				name: '笑话大全',
+				icon: '#icon-youxi',
+				url: ''
+			}, {
+				name: '笑话大全',
+				icon: '#icon-youxi',
+				url: ''
+			}]
 		}]
 	},
 	/**
