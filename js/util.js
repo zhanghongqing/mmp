@@ -49,7 +49,7 @@ var util = {
 			children: [{
 				name: '笑话大全',
 				icon: '#icon-icon-test',
-				url: ''
+				url: '/html/joke/jokeIndex.html'
 			}, {
 				name: '笑话大全',
 				icon: '#icon-icon-test',

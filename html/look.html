@@ -9,8 +9,11 @@
 		<link href="../css/mui.min.css" rel="stylesheet" />
 		<link rel="stylesheet" type="text/css" href="../css/common.css" />
 		<style type="text/css">
+			#lookContainer{
+				background: #fff;
+			}
 			.mui-slider-group {
-				height: calc(100vh - 40px);
+				height: calc(100vh - 41px);
 			}
 			
 			.mui-segmented-control.mui-segmented-control-inverted .mui-control-item.mui-active {
@@ -74,7 +77,7 @@
 		<script type="text/x-template" id="grid">
 			<div class="fourView">
 				<ul>
-					<li class="view_item" v-for="(item, key) in data" :key="key">
+					<li class="view_item" @tap="openPage(item.url)" v-for="(item, key) in data" :key="key">
 						<div class="view_item_icon">
 							<svg class="icon" aria-hidden="true">
 								<use :xlink:href="item.icon"></use>
@@ -119,7 +122,16 @@
 							components: {
 								grid: {
 									template: "#grid",
-									props: ['data']
+									props: ['data'],
+									methods: {
+										openPage (url) {
+											if (url === '') {
+												mui.toast('地址为空！！！',{ duration:'long', type:'div' })
+												return
+											}
+											alert(url)
+										}
+									}
 								}
 							}
 						}
