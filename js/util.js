@@ -4,6 +4,41 @@ var util = {
 		NORMAL_COLOR: "#333",
 		subpages: ["html/look.html", "html/game.html", "html/mine.html"]
 	},
+	/**数据**/
+	configData: {
+		indexGridData: [{
+			name: '测试名称1'
+		}, {
+			name: '测试名称'
+		}, {
+			name: '测试名称'
+		}, {
+			name: '测试名称'
+		}, {
+			name: '测试名称'
+		}, {
+			name: '测试名称'
+		}, {
+			name: '测试名称'
+		}, {
+			name: '测试名称'
+		}, {
+			name: '测试名称'
+		}, {
+			name: '测试名称'
+		}, {
+			name: '测试名称'
+		}],
+		indexPopData: [{
+			name: '测试'
+		}, {
+			name: '测试'
+		}, {
+			name: '测试'
+		}, {
+			name: '测试'
+		}]
+	},
 	/**
 	 *  简单封装了绘制原生view控件的方法
 	 *  绘制内容支持font（文本，字体图标）,图片img , 矩形区域rect
@@ -23,7 +58,7 @@ var util = {
 			subpages = util.options.subpages,
 			self = plus.webview.currentWebview(),
 			temp = {};
-			
+
 		//兼容安卓上添加titleNView 和 设置沉浸式模式会遮盖子webview内容
 		if(mui.os.android) {
 			if(plus.navigator.isImmersedStatusbar()) {
@@ -32,7 +67,7 @@ var util = {
 			if(self.getTitleNView()) {
 				subpage_style.top += 40;
 			}
-			
+
 		}
 
 		// 初始化第一个tab项为首次显示

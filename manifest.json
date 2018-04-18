@@ -149,7 +149,7 @@
 							},
 							"textStyles": {
 								"align": "center",
-								"size": "10px"
+								"size": "12px"
 							}
 						},{
 							"tag": "font",
@@ -178,7 +178,7 @@
 							},
 							"textStyles": {
 								"align": "center",
-								"size": "10px"
+								"size": "12px"
 							}
 						},{
 							"tag": "font",
@@ -207,7 +207,7 @@
 							},
 							"textStyles": {
 								"align": "center",
-								"size": "10px"
+								"size": "12px"
 							}
 						},{
 							"tag": "font",
@@ -236,7 +236,7 @@
 							},
 							"textStyles": {
 								"align": "center",
-								"size": "10px"
+								"size": "12px"
 							}
 						},
 						{
@@ -383,12 +383,12 @@
 					"fonts/mui.ttf",
 					"fonts/iconfont.ttf",
 					"html/tab-webview-subpage-chat.html",
-					"js/util.js"
+					"js/util.js",
+					"html/look.html"
 				],
 				"refer": [
 					"html/tab-webview-subpage-contact.html",
 					"html/new-webview.html",
-					"html/look.html",
 					"html/mine.html",
 					"html/game.html"
 				],

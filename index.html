@@ -7,17 +7,93 @@
 		<title>首页</title>
 		<script type="text/javascript" src="js/common.js"></script>
 		<link href="css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="css/common.css" />
 		<style>
 			html,
 			body {
 				background-color: #fff;
 			}
+			
+			.mui-popover {
+				position: fixed;
+			}
+			
+			#indexBar {
+				background: #ffe999;
+			}
+			
+			#indexContainer {
+				height: calc(100vh - 50px);
+				background: #fff;
+			}
+			
+			.QRcode {
+				color: #fff;
+				width: 40px;
+				height: 40px;
+				line-height: 40px;
+				font-size: 34px;
+				position: relative;
+				top: 50%;
+				margin-top: -20px;
+			}
+			
+			.QRcode:before {
+				content: '\e61b';
+			}
+			
+			.popOver {
+				position: absolute;
+				top: 50%;
+				margin-top: -20px;
+				right: 10px;
+				width: 40px;
+				height: 40px;
+				color: #fff;
+				font-size: 38px;
+				line-height: 40px;
+				text-align: center;
+			}
+			
+			.popOver:before {
+				content: '\e6ad';
+			}
+			
+			.searchIcon {
+				font-size: 20px;
+				margin-left: 6px;
+				position: relative;
+				top: 2px;
+			}
+			
+			.searchIcon:before {
+				content: '\e641';
+			}
+			
+			.searchBtn {
+				width: calc(100vw - 120px);
+				height: 30px;
+				border-radius: 15px;
+				line-height: 30px;
+				color: #fff;
+				background: rgba(0, 0, 0, 0.2);
+				position: absolute;
+				top: 50%;
+				left: 0;
+				right: 0;
+				margin: -15px auto 0;
+			}
 		</style>
 	</head>
 
 	<body>
-		<header class="mui-bar mui-bar-nav">
-			123
+		<header class="mui-bar mui-bar-nav" id="indexBar">
+			<div class="iconfont QRcode"></div>
+			<div class="searchBtn">
+				<span class="iconfont searchIcon"></span>
+				<span class="searchText">请输入搜索关键字</span>
+			</div>
+			<div class="iconfont popOver"></div>
 		</header>
 		<div class="mui-content mui-scroll-wrapper" id="indexContainer">
 			<div class="mui-scroll">
@@ -25,7 +101,9 @@
 				<grid></grid>
 			</div>
 		</div>
-
+		<div id="indexPopover" class="mui-popover">
+			<popovers></popovers>
+		</div>
 		<script type="text/x-template" id="grid">
 			<div class="fourView">
 				<ul>
@@ -40,27 +118,51 @@
 				</ul>
 			</div>
 		</script>
+		<script type="text/x-template" id="popoverCom">
+			<ul class="mui-table-view">
+				<li class="mui-table-view-cell" v-for="(item, index) in datas" :key="index">
+					<a href="#">item.name</a>
+				</li>
+			</ul>
+		</script>
+		<script src="js/iconfont.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/vue.min.js" type="text/javascript" charset="utf-8"></script>
 		<script src="js/mui.min.js"></script>
 		<script src="js/util.js"></script>
 		<script type="text/javascript">
+			var popBot
 			(function() {
 				mui.init({
 					swipeBack: true //启用右滑关闭功能
 				});
-				mui('.mui-scroll-wrapper').scroll({})
 				init()
 				mui.plusReady(function() {
 					// 创建子webview窗口 并初始化
 					var aniShow = {};
 					util.initSubpage(aniShow);
-
 					var nview = plus.nativeObj.View.getViewById('tabBar'),
 						activePage = plus.webview.currentWebview(),
 						targetPage,
 						subpages = util.options.subpages,
 						pageW = window.innerWidth,
 						currIndex = 0;
-
+						
+					var width = window.innerWidth
+					var self = plus.webview.currentWebview()
+						
+					popBot = util.drawNative('popBot', {
+						bottom: '0px',
+						left: '0px',
+						width: width + 'px',
+						height: '50px'
+					})
+					popBot.drawRect({color:'rgba(0,0,0,0.3)'}, {bottom:'0px',left:'0px',width:'100%',height:'100%'});
+					self.append(popBot);
+					popBot.addEventListener("click", function(e){
+						mui('#indexPopover').popover('toggle', document.getElementsByClassName("popOver")[0])
+						popBot.hide()
+					}, false);
+					popBot.hide()
 					/**
 					 * 根据判断view控件点击位置判断切换的tab
 					 */
@@ -75,7 +177,7 @@
 						} else {
 							currIndex = 3;
 						}
-						// 匹配对应tab窗口	
+						// 匹配对应tab窗口
 						if(currIndex > 0) {
 							targetPage = plus.webview.getWebviewById(subpages[currIndex - 1]);
 						} else {
@@ -95,37 +197,41 @@
 					});
 				});
 			})();
-			function init () {
-				Vue.component("grid", {
-					template: "#grid"
-				});
+
+			function init() {
+				addListen()
 				var vue = new Vue({
-					el: '#indexContainer',
-					data: {
-						datas: [{
-							name: 123
-						}, {
-							name: 123
-						}, {
-							name: 123
-						}, {
-							name: 123
-						}, {
-							name: 123
-						}, {
-							name: 123
-						}, {
-							name: 123
-						}, {
-							name: 123
-						}, {
-							name: 123
-						}, {
-							name: 123
-						}, {
-							name: 123
-						}]
-					}
+					components: {
+						grid: {
+							template: "#grid",
+							data: () => ({
+								datas: util.configData.indexGridData
+							})
+						}
+					},
+					el: '#indexContainer'
+				})
+				var vue1 = new Vue({
+					components: {
+						popovers: {
+							template: "#popoverCom",
+							data: () => ({
+								datas: util.configData.indexPopData
+							})
+						}
+					},
+					el: '#indexPopover'
+				})
+				mui('.mui-scroll-wrapper').scroll({})
+			}
+
+			function addListen() {
+				mui('#indexBar').on('tap', '.popOver', function() {
+					mui('#indexPopover').popover('toggle', document.getElementsByClassName("popOver")[0])
+					popBot.show()
+				})
+				mui('body').on('tap', '.mui-backdrop', function() {
+					popBot.hide()
 				})
 			}
 		</script>
