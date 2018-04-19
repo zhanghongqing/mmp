@@ -51,9 +51,9 @@ var util = {
 				icon: '#icon-icon-test',
 				url: '/html/joke/jokeIndex.html'
 			}, {
-				name: '笑话大全',
-				icon: '#icon-icon-test',
-				url: ''
+				name: '百思不得姐',
+				icon: '#icon-nvtongxue',
+				url: '/html/joke/sisIndex.html'
 			}, {
 				name: '笑话大全',
 				icon: '#icon-youxi',
@@ -293,5 +293,48 @@ var util = {
 			currTag = nviewObj.tags[currIndex]; // 获取当前需重绘的tag
 
 		nviewEvent.drawText(currTag.text, currTag.position, util.changeColor(currTag.textStyles, color), currTag.id);
+	},
+	/*
+	 * mui ajax 获取数据
+	 */
+	getApiData: function(url, data, success, error) {
+		mui.ajax(url, {
+			data: Object.assign({}, {
+				"showapi_timestamp": formatterDateTime(),
+				"showapi_appid": 61038, //这里需要改成自己的appid
+				"showapi_sign": 'b2c343cd1f6647e5832e35196698433c' //这里需要改成自己的应用的密钥secret
+			}, data),
+			dataType: 'json', //服务器返回json格式数据
+			type: 'post', //HTTP请求类型
+			timeout: 10000, //超时时间设置为10秒；
+			headers: {
+				'Content-Type': 'application/x-www-form-urlencoded'
+			},
+			success: success,
+			error: error
+		});
 	}
 };
+
+function formatterDateTime() {
+	var date = new Date()
+	var month = date.getMonth() + 1
+	var datetime = date.getFullYear() +
+		"" // "年"
+		+
+		(month >= 10 ? month : "0" + month) +
+		"" // "月"
+		+
+		(date.getDate() < 10 ? "0" + date.getDate() : date
+			.getDate()) +
+		"" +
+		(date.getHours() < 10 ? "0" + date.getHours() : date
+			.getHours()) +
+		"" +
+		(date.getMinutes() < 10 ? "0" + date.getMinutes() : date
+			.getMinutes()) +
+		"" +
+		(date.getSeconds() < 10 ? "0" + date.getSeconds() : date
+			.getSeconds());
+	return datetime;
+}

@@ -16,6 +16,9 @@
 				height: calc(100vh - 41px);
 			}
 			
+			.mui-segmented-control.mui-segmented-control-inverted .mui-control-item{
+				color: #666;
+			}
 			.mui-segmented-control.mui-segmented-control-inverted .mui-control-item.mui-active {
 				color: #ff5533;
 			}
@@ -96,15 +99,16 @@
 			mui.ready(function() {
 				mui.init()
 				mui('.mui-scroll-wrapper').scroll({})
-				init()
-				mui.plusReady(function() {})
+				mui.plusReady(function() {
+					init(plus)
+				})
 			})
 
-			function init() {
-				loadVue()
+			function init(plus) {
+				loadVue(plus)
 			}
 
-			function loadVue() {
+			function loadVue(plus) {
 				var vue = new Vue({
 					components: {
 						tabslider: {
@@ -129,7 +133,8 @@
 												mui.toast('地址为空！！！',{ duration:'long', type:'div' })
 												return
 											}
-											alert(url)
+											let id = url.split('/').reverse()[0].split('.')[0]
+											plus.webview.open(url, id, {}, 'slide-in-right', 100)
 										}
 									}
 								}

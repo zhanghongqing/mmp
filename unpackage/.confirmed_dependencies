@@ -72,5 +72,17 @@
       "fonts/mui.ttf"
     ],
     "refer": []
+  },
+  "html/look.html": {
+    "refer": [
+      "html/joke/jokeIndex.html",
+      "html/joke/sisIndex.html"
+    ],
+    "resources": []
+  },
+  "html/joke/sisIndex.html": {
+    "refer": [
+      "html/joke/sisDetail.html"
+    ]
   }
 }

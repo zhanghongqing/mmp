@@ -310,6 +310,25 @@
 					transform: rotate(360deg);
 				}
 			}
+			
+			.love {
+				font-size: 12px;
+				color: #e75151;
+				margin-right: 2px;
+			}
+			
+			.love:before {
+				content: '\e64e'
+			}
+			.hate {
+				font-size: 12px;
+				color: #999;
+				margin-left: 10px;
+				margin-right: 2px;
+			}
+			.hate:before {
+				content: '\e731'
+			}
 		</style>
 	</head>
 
@@ -317,7 +336,7 @@
 		<!-- 主页面标题 -->
 		<header class="mui-bar mui-bar-nav">
 			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
-			<h1 class="mui-title">笑话大全</h1>
+			<h1 class="mui-title">百思不得姐</h1>
 		</header>
 		<nav class="mui-bar mui-bar-tab">
 			<a class="mui-tab-item mui-active" jokeType="1">
@@ -344,30 +363,30 @@
 						<div class="loading" v-if="loading">
 							<span class="iconfont loadingIcon"></span>
 						</div>
-						<jokemain v-else :jokedata="jokeListData" :curpage="curPage" :pagesize="pageSize"></jokemain>
+						<jokemain v-else :sisdata="sisListData" :curpage="curPage" :pagesize="pageSize"></jokemain>
 					</div>
 				</div>
 			</div>
 		</div>
 		<script type="text/x-template" id="jokeList">
 			<div class="jokeList">
-				<div class="mui-card" v-for="(item, index) in jokedata">
+				<div class="mui-card" v-for="(item, index) in sisdata">
 					<!--页眉，放置标题-->
 					<div class="mui-card-header mui-card-media">
-						<img src="../../images/joke.png" />
+						<img :src="item.profile_image" />
 						<div class="mui-media-body">
-							<div class="jokeTitle">{{item.title}}</div>
-							<p>发表于 {{new Date(item.ct).toLocaleString()}}</p>
+							<div class="jokeTitle">{{item.name}}</div>
+							<p>发表于 {{item.create_time}}<span style="float: right;"><b class="iconfont love"></b>{{item.love}}<b class="iconfont hate"></b>{{item.hate}}</span></p>
 						</div>
 					</div>
 					<!--内容区-->
 					<div class="mui-card-content jokeContent">
-						<pre v-html="item.text" v-if="item.type === 1"></pre>
-						<img :src="item.img" data-preview-src="" data-preview-group="1" v-else/>
+						<div class="desc">{{item.text}}</div>
 					</div>
 					<!--页脚，放置补充信息或支持的操作-->
 					<div class="mui-card-footer">
 						{{(pagesize * (curpage - 1)) + (index + 1)}}
+						<button type="button" class="mui-btn" @tap="openDetail(item)">看一看</button>
 					</div>
 				</div>
 			</div>
@@ -386,21 +405,28 @@
 		<script type="text/javascript">
 			mui.ready(function() {
 				mui.init()
-				init()
-				mui.plusReady(function() {})
+				mui.plusReady(function() {
+					init(plus)
+				})
 			})
 
-			function init() {
-				initVue()
+			function init(p) {
+				initVue(p)
 				mui.previewImage()
 			}
 
-			function initVue() {
+			function initVue(p) {
 				var vue = new Vue({
 					components: {
 						jokemain: {
 							template: "#jokeList",
-							props: ['jokedata', 'pagesize', 'curpage']
+							props: ['sisdata', 'pagesize', 'curpage'],
+							methods: {
+								openDetail(data) {
+									localStorage.setItem('sisDetailData', JSON.stringify(data))
+									p.webview.open('/html/joke/sisDetail.html', 'sisDetail', {}, 'pop-in', 100)
+								}
+							}
 						},
 						pagenation: {
 							template: "#pageNation",
@@ -416,7 +442,7 @@
 					data: () => ({
 						totalPage: 20,
 						pageSize: 20,
-						jokeListData: [],
+						sisListData: [],
 						curPage: 1,
 						jokeType: 1,
 						loading: true
@@ -428,13 +454,14 @@
 						getTextJokeData() {
 							let _this = this
 							_this.loading = true
-							_this.jokeListData = []
-							util.getApiData('http://route.showapi.com/341-' + _this.jokeType, {
+							_this.sisListData = []
+							util.getApiData('http://route.showapi.com/255-1', {
 								page: _this.curPage,
-								maxResult: _this.pageSize
+								type: 10
 							}, function(data) {
-								data = data.showapi_res_body
-								_this.jokeListData = data.contentlist
+								console.log(data)
+								data = data.showapi_res_body.pagebean
+								_this.sisListData = data.contentlist
 								_this.totalPage = data.allPages
 								_this.loading = false
 							}, function(error) {

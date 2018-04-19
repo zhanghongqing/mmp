@@ -451,6 +451,21 @@
 				],
 				"refer": [],
 				"priority": 0
+			},
+			"html/look.html": {
+				"resources": [],
+				"refer": [
+					"html/joke/jokeIndex.html",
+					"html/joke/sisIndex.html"
+				],
+				"priority": 0
+			},
+			"html/joke/sisIndex.html": {
+				"resources": [],
+				"refer": [
+					"html/joke/sisDetail.html"
+				],
+				"priority": 0
 			}
 		},
 		"idle": {

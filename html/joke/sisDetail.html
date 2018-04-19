@@ -1,0 +1,108 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../../css/common.css" />
+		<style type="text/css">
+			.mui-title img{
+				height: 36px;
+				vertical-align: middle;
+				margin-right: 6px;
+			}
+			.mui-title span{
+				vertical-align: middle;
+				font-size: 20px;
+				color: #666;
+			}
+			.imgContainer{
+				background: #fff;
+			}
+			.imgContainer img{
+				border: 1px solid #ccc;
+			}
+		</style>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+		    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+		    <h1 class="mui-title"></h1>
+		</header>
+		<div class="mui-content mui-scroll-wrapper" id="sisDetailContainer">
+			<div class="mui-scroll">
+				<!--这里放置真实显示的DOM内容-->
+				<detail :detaildata="detailData" :images="images"></detail>
+			</div>
+		</div>
+		<script type="text/x-template" id="detailCom">
+			<div class="detailContainer">
+				<div class="desc">{{detaildata.text}}</div>
+				<div class="imgContainer">
+					<img v-for="(img, index) in images" :key="index" :src="img" />
+				</div>
+			</div>
+		</script>
+		<script src="../../js/common.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/vue.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/mui.min.js"></script>
+		<script src="../../js/mui.zoom.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/mui.previewimage.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			mui.ready(function() {
+				mui.init()
+				mui.plusReady(function() {
+					init(plus)
+				})
+			})
+
+			function init(p) {
+				var vue = new Vue({
+					components: {
+						detail: {
+							template: "#detailCom",
+							props: ['detaildata', 'images'],
+							mounted() {
+								mui('.mui-scroll-wrapper').scroll();
+							}
+						}
+					},
+					created() {
+						let data = localStorage.getItem('sisDetailData')
+						if(!data) {
+							mui.alert('详情获取失败')
+							let c = p.webview.currentWebview()
+							c.close()
+							return
+						}
+						this.detailData = JSON.parse(data)
+					},
+					data: () => ({
+						detailData: null,
+						images: []
+					}),
+					watch: {
+						detailData () {
+							let newImages = []
+							for (let i in this.detailData) {
+								if(/^image/.test(i)){
+									let index = i.match(/[0-9]+/g)[0]
+									newImages[index] = this.detailData[i]
+								}
+							}
+							this.images = newImages
+						}
+					},
+					el: '#sisDetailContainer',
+					mounted() {
+						document.getElementsByClassName('mui-title')[0].innerHTML = '<img src="'+this.detailData.profile_image+'"><span>' + this.detailData.name + '</span>'
+					}
+				})
+			}
+		</script>
+	</body>
+
+</html>
