@@ -55,9 +55,9 @@ var util = {
 				icon: '#icon-nvtongxue',
 				url: '/html/joke/sisIndex.html'
 			}, {
-				name: '笑话大全',
-				icon: '#icon-youxi',
-				url: ''
+				name: '花瓣福利',
+				icon: '#icon-huabanwang',
+				url: '/html/image/flower.html'
 			}, {
 				name: '笑话大全',
 				icon: '#icon-youxi',

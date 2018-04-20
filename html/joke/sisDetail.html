@@ -8,44 +8,107 @@
 		<link href="../../css/mui.min.css" rel="stylesheet" />
 		<link rel="stylesheet" type="text/css" href="../../css/common.css" />
 		<style type="text/css">
-			.mui-title img{
+			.mui-title img {
 				height: 36px;
 				vertical-align: middle;
 				margin-right: 6px;
 			}
-			.mui-title span{
+			
+			.mui-title span {
 				vertical-align: middle;
 				font-size: 20px;
 				color: #666;
 			}
-			.imgContainer{
+			
+			.imgContainer {
 				background: #fff;
 			}
-			.imgContainer img{
-				border: 1px solid #ccc;
+			
+			.imgContainer img {
+				width: 100%;
+			}
+			
+			.mui-scroll {
+				background: #fff;
+			}
+			
+			.detailContainer {
+				padding: 10px;
+			}
+			
+			.detailContainer .desc {
+				color: #666;
+				font-size: 16px;
+				text-indent: 2em;
+				padding: 10px 0;
+			}
+			
+			.detailContainer .time {
+				color: #999;
+				font-size: 16px;
+				line-height: 40px;
+			}
+			
+			.detailContainer .imgContainer {
+				margin-bottom: 10px;
 			}
 		</style>
 	</head>
 
 	<body>
 		<header class="mui-bar mui-bar-nav">
-		    <a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
-		    <h1 class="mui-title"></h1>
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title"></h1>
 		</header>
 		<div class="mui-content mui-scroll-wrapper" id="sisDetailContainer">
 			<div class="mui-scroll">
 				<!--这里放置真实显示的DOM内容-->
-				<detail :detaildata="detailData" :images="images"></detail>
+				<detail :detaildata="detailData"></detail>
 			</div>
 		</div>
 		<script type="text/x-template" id="detailCom">
 			<div class="detailContainer">
 				<div class="desc">{{detaildata.text}}</div>
-				<div class="imgContainer">
-					<img v-for="(img, index) in images" :key="index" :src="img" />
+				<div class="imgContainer" v-if="detaildata.type == 10">
+					<img :src="detaildata.image0" />
 				</div>
+				<div ref="videoContainer" class="videoContainer" v-if="detaildata.type == 41">
+					<div class="js-video">
+						<video class="js-media" poster="../../images/poster.png">
+							<source :src="detaildata.video_uri" type="video/mp4" />
+							<p>你的浏览器不支持 HTML5 Video。</p>
+						</video>
+						<i data-playPause class="playPause fa fa-play ui-icon"><span></span></i>
+						<div class="ui">
+							<div>
+								<div data-progress class="progress">
+									<div data-buffer class="progress-buffer"></div>
+									<div data-time class="progress-time"></div>
+								</div>
+								<!-- progress -->
+							</div>
+							<div>
+								<span class="timeDisplay"><i data-currentTime>0:00</i> / <i data-duration>0:00</i></span>
+							</div>
+							<div>
+								<i data-mute class="fa fa-volume-up ui-icon iconfont"></i>
+							</div>
+							<div>
+								<div data-volume="100" class="volumeControl"><span class="ui-slider-handle"></span></div>
+							</div>
+						</div>
+						<!-- ui -->
+						<i data-fullscreen class="fullscreen iconicfill-fullscreen" title="fullscreen"></i>
+
+					</div>
+					<!-- js-video -->
+				</div>
+				<div class="time">{{detaildata.create_time}}</div>
 			</div>
 		</script>
+		<script src="../../js/jquery.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/jquery-ui.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/video.js" type="text/javascript" charset="utf-8"></script>
 		<script src="../../js/common.js" type="text/javascript" charset="utf-8"></script>
 		<script src="../../js/vue.min.js" type="text/javascript" charset="utf-8"></script>
 		<script src="../../js/mui.min.js"></script>
@@ -54,8 +117,11 @@
 		<script type="text/javascript">
 			mui.ready(function() {
 				mui.init()
+				init()
 				mui.plusReady(function() {
-					init(plus)
+					mui.back = function() {
+						plus.webview.close('sisDetail')
+					}
 				})
 			})
 
@@ -66,6 +132,13 @@
 							template: "#detailCom",
 							props: ['detaildata', 'images'],
 							mounted() {
+								if(this.detaildata.type == 41) {
+									var containerWidth = this.$refs.videoContainer.clientWidth
+									$('.js-video').video();
+									$('.js-media').css({
+										'width': containerWidth + 'px'
+									})
+								}
 								mui('.mui-scroll-wrapper').scroll();
 							}
 						}
@@ -81,24 +154,11 @@
 						this.detailData = JSON.parse(data)
 					},
 					data: () => ({
-						detailData: null,
-						images: []
+						detailData: null
 					}),
-					watch: {
-						detailData () {
-							let newImages = []
-							for (let i in this.detailData) {
-								if(/^image/.test(i)){
-									let index = i.match(/[0-9]+/g)[0]
-									newImages[index] = this.detailData[i]
-								}
-							}
-							this.images = newImages
-						}
-					},
 					el: '#sisDetailContainer',
 					mounted() {
-						document.getElementsByClassName('mui-title')[0].innerHTML = '<img src="'+this.detailData.profile_image+'"><span>' + this.detailData.name + '</span>'
+						document.getElementsByClassName('mui-title')[0].innerHTML = '<img src="' + this.detailData.profile_image + '"><span>' + this.detailData.name + '</span>'
 					}
 				})
 			}

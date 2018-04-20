@@ -13,16 +13,19 @@
 				color: #333;
 			}
 			
-			.tjoke:before {
-				content: '\e62d';
+			.sis1:before {
+				content: '\e783';
 			}
 			
-			.ujoke:before {
-				content: '\e604';
+			.sis2:before {
+				content: '\e638';
 			}
 			
-			.djoke:before {
-				content: '\e64b';
+			.sis3:before {
+				content: '\e62e';
+			}
+			.sis4:before {
+				content: '\e646';
 			}
 			
 			.jokeContent {
@@ -320,14 +323,20 @@
 			.love:before {
 				content: '\e64e'
 			}
+			
 			.hate {
 				font-size: 12px;
 				color: #999;
 				margin-left: 10px;
 				margin-right: 2px;
 			}
+			
 			.hate:before {
 				content: '\e731'
+			}
+			
+			.desc {
+				color: #666;
 			}
 		</style>
 	</head>
@@ -339,17 +348,21 @@
 			<h1 class="mui-title">百思不得姐</h1>
 		</header>
 		<nav class="mui-bar mui-bar-tab">
-			<a class="mui-tab-item mui-active" jokeType="1">
-				<span class="mui-icon iconfont tjoke"></span>
-				<span class="mui-tab-label">文本笑话</span>
+			<a class="mui-tab-item mui-active" sisType="all">
+				<span class="mui-icon iconfont sis1"></span>
+				<span class="mui-tab-label">全部</span>
 			</a>
-			<a class="mui-tab-item" jokeType="2">
-				<span class="mui-icon iconfont ujoke"></span>
-				<span class="mui-tab-label">图片笑话</span>
+			<a class="mui-tab-item" sisType="29">
+				<span class="mui-icon iconfont sis2"></span>
+				<span class="mui-tab-label">段子</span>
 			</a>
-			<a class="mui-tab-item" jokeType="3">
-				<span class="mui-icon iconfont djoke"></span>
-				<span class="mui-tab-label">动态笑图</span>
+			<a class="mui-tab-item" sisType="10">
+				<span class="mui-icon iconfont sis3"></span>
+				<span class="mui-tab-label">图片</span>
+			</a>
+			<a class="mui-tab-item" sisType="41">
+				<span class="mui-icon iconfont sis4"></span>
+				<span class="mui-tab-label">视频</span>
 			</a>
 		</nav>
 		<div class="mui-content" id="jokeContainer">
@@ -386,7 +399,8 @@
 					<!--页脚，放置补充信息或支持的操作-->
 					<div class="mui-card-footer">
 						{{(pagesize * (curpage - 1)) + (index + 1)}}
-						<button type="button" class="mui-btn" @tap="openDetail(item)">看一看</button>
+						<button type="button" v-if="item.type == 10" class="mui-btn" @tap="openDetail(item)">看图片</button>
+						<button type="button" v-if="item.type == 41" class="mui-btn" @tap="openDetail(item)">看视频</button>
 					</div>
 				</div>
 			</div>
@@ -400,19 +414,19 @@
 		<script src="../../js/util.js" type="text/javascript" charset="utf-8"></script>
 		<script src="../../js/vue.min.js" type="text/javascript" charset="utf-8"></script>
 		<script src="../../js/mui.min.js"></script>
-		<script src="../../js/mui.zoom.js" type="text/javascript" charset="utf-8"></script>
-		<script src="../../js/mui.previewimage.js" type="text/javascript" charset="utf-8"></script>
 		<script type="text/javascript">
 			mui.ready(function() {
 				mui.init()
 				mui.plusReady(function() {
 					init(plus)
+					mui.back = function() {
+						plus.webview.close('sisIndex')
+					}
 				})
 			})
 
 			function init(p) {
 				initVue(p)
-				mui.previewImage()
 			}
 
 			function initVue(p) {
@@ -444,7 +458,7 @@
 						pageSize: 20,
 						sisListData: [],
 						curPage: 1,
-						jokeType: 1,
+						sisType: 'all',
 						loading: true
 					}),
 					created() {
@@ -457,7 +471,7 @@
 							_this.sisListData = []
 							util.getApiData('http://route.showapi.com/255-1', {
 								page: _this.curPage,
-								type: 10
+								type: this.sisType === 'all' ? '' : this.sisType
 							}, function(data) {
 								console.log(data)
 								data = data.showapi_res_body.pagebean
@@ -477,9 +491,8 @@
 							this.getTextJokeData()
 							mui('.mui-scroll-wrapper').scroll().scrollTo(0, 0, 100)
 						},
-						jokeType() {
+						sisType() {
 							this.curPage = 1
-							this.pageSize = this.jokeType === 1 ? 20 : 5
 							this.getTextJokeData()
 							mui('.mui-scroll-wrapper').scroll().scrollTo(0, 0, 100)
 						}
@@ -491,7 +504,7 @@
 					}
 				})
 				mui('.mui-bar.mui-bar-tab').on('tap', '.mui-tab-item', function() {
-					vue.jokeType = this.attributes.jokeType.nodeValue
+					vue.sisType = this.attributes.sisType.nodeValue
 				})
 			}
 		</script>

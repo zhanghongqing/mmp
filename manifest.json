@@ -456,7 +456,8 @@
 				"resources": [],
 				"refer": [
 					"html/joke/jokeIndex.html",
-					"html/joke/sisIndex.html"
+					"html/joke/sisIndex.html",
+					"html/image/flower.html"
 				],
 				"priority": 0
 			},
@@ -465,6 +466,13 @@
 				"refer": [
 					"html/joke/sisDetail.html"
 				],
+				"priority": 0
+			},
+			"html/joke/sisDetail.html": {
+				"resources": [
+					"/images/videoLoading.gif"
+				],
+				"refer": [],
 				"priority": 0
 			}
 		},
