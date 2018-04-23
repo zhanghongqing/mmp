@@ -59,9 +59,9 @@ var util = {
 				icon: '#icon-huabanwang',
 				url: '/html/image/flower.html'
 			}, {
-				name: '笑话大全',
-				icon: '#icon-youxi',
-				url: ''
+				name: '鬼故事',
+				icon: '#icon-haunted_house__easyiconnet',
+				url: '/html/article/ghostIndex.html'
 			}, {
 				name: '笑话大全',
 				icon: '#icon-youxi',

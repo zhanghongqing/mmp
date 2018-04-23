@@ -6,6 +6,35 @@
 		<title></title>
 		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
 		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../../css/common.css" />
+		<style type="text/css">
+			.mui-segmented-control.mui-scroll-wrapper {
+				height: 40px;
+			}
+			
+			#flowerContainer {
+				width: 100%;
+				height: 100vh;
+				background: #fff;
+			}
+			
+			#dataContaienr {
+				position: relative;
+				width: 100%;
+				height: calc(100vh - 84px);
+			}
+			
+			#pageContainer {
+				width: 100%;
+				height: 10vw;
+			}
+			
+			.title {
+				line-height: 40px;
+				font-size: 16px;
+				padding: 0 10px;
+			}
+		</style>
 	</head>
 
 	<body>
@@ -13,15 +42,126 @@
 			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
 			<h1 class="mui-title">花瓣福利</h1>
 		</header>
-		<div class="mui-content mui-scroll-wrapper">
-			<div class="mui-scroll">
-				<!--这里放置真实显示的DOM内容-->
-				sd
+		<div class="mui-content" id="flowerContainer">
+			<div class="mui-scroll-wrapper mui-slider-indicator mui-segmented-control mui-segmented-control-inverted">
+				<div class="mui-scroll">
+					<!--这里放置真实显示的DOM内容-->
+					<a class="mui-control-item" v-for="(type, tindex) in types" @tap="changeType(type.id)" :class="type.id === curType ? 'mui-active' : ''" :key="tindex">
+						{{type.title}}
+					</a>
+				</div>
+			</div>
+			<div id="dataContaienr">
+				<div class="mui-scroll-wrapper" id="fl">
+					<div class="mui-scroll">
+						<div class="loading" v-if="loading">
+							<span class="iconfont loadingIcon"></span>
+						</div>
+						<himage :data="data" v-else></himage>
+					</div>
+				</div>
 			</div>
 		</div>
+		<script type="text/x-template" id="imgList">
+			<div class="imgList">
+				<div class="mui-card" v-for="(item, index) in data">
+					<!--内容区-->
+					<div class="mui-card-content">
+						<p class="title" v-html="item.title"></p>
+						<img :src="item.thumb" />
+					</div>
+				</div>
+			</div>
+		</script>
+		<script src="../../js/common.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/util.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/vue.min.js" type="text/javascript" charset="utf-8"></script>
 		<script src="../../js/mui.min.js"></script>
 		<script type="text/javascript">
-			mui.init()
+			mui.ready(function() {
+				mui.init();
+				init()
+			})
+
+			function init() {
+				loadVue()
+			}
+
+			function loadVue() {
+				var vue = new Vue({
+					components: {
+						himage: {
+							template: "#imgList",
+							props: ['data']
+						}
+					},
+					created() {
+						this.getData()
+					},
+					el: '#flowerContainer',
+					methods: {
+						changeType(type) {
+							this.curType = type
+							this.getData()
+							mui('#fl').scroll().scrollTo(0,0,100)
+						},
+						getData() {
+							let _this = this
+							this.loading = true
+							this.data = []
+							util.getApiData('http://route.showapi.com/819-1', {
+								page: _this.curPage,
+								num: '50',
+								type: _this.curType
+							}, function(data) {
+								data = data.showapi_res_body
+								_this.data = data
+								_this.loading = false
+								//							_this.loading = false
+							}, function(error) {
+								mui.toast('数据获取失败', {
+									duration: 'long',
+									type: 'div'
+								})
+							})
+						}
+					},
+					data: () => ({
+						loading: true,
+						data: [],
+						curPage: 1,
+						curType: '',
+						types: [{
+							title: '全部',
+							id: ''
+						}, {
+							title: '大胸妹',
+							id: '34'
+						}, {
+							title: '小清新',
+							id: '35'
+						}, {
+							title: '文艺范',
+							id: '36'
+						}, {
+							title: '性感妹',
+							id: '37'
+						}, {
+							title: '大长腿',
+							id: '38'
+						}, {
+							title: '黑丝袜',
+							id: '39'
+						}, {
+							title: '小翘臀',
+							id: '40'
+						}]
+					}),
+					mounted() {
+						mui('.mui-scroll-wrapper').scroll()
+					}
+				})
+			}
 		</script>
 	</body>
 

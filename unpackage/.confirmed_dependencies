@@ -7,7 +7,8 @@
 			"fonts/mui.ttf",
 			"fonts/iconfont.ttf",
 			"js/util.js",
-			"html/tab-webview-subpage-chat.html"
+			"html/tab-webview-subpage-chat.html",
+			"html/look.html"
 		],
 		"refer": [
 			"html/tab-webview-subpage-setting.html",
@@ -77,7 +78,8 @@
 		"refer": [
 			"html/joke/jokeIndex.html",
 			"html/joke/sisIndex.html",
-			"html/image/flower.html"
+			"html/image/flower.html",
+			"html/article/ghostIndex.html"
 		],
 		"resources": []
 	},
