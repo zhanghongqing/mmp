@@ -475,6 +475,13 @@
 				],
 				"refer": [],
 				"priority": 0
+			},
+			"html/article/ghostIndex.html": {
+				"resources": [],
+				"refer": [
+					"html/article/ghostDetail.html"
+				],
+				"priority": 0
 			}
 		},
 		"idle": {

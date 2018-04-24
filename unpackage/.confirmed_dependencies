@@ -93,5 +93,10 @@
 		"resources": [
 			"/images/videoLoading.gif"
 		]
+	},
+	"html/article/ghostIndex.html": {
+		"refer": [
+			"html/article/ghostDetail.html"
+		]
 	}
 }

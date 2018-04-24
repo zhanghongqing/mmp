@@ -63,9 +63,9 @@ var util = {
 				icon: '#icon-haunted_house__easyiconnet',
 				url: '/html/article/ghostIndex.html'
 			}, {
-				name: '笑话大全',
-				icon: '#icon-youxi',
-				url: ''
+				name: '藏头诗生成',
+				icon: '#icon-gushu',
+				url: '/html/article/poem.html'
 			}]
 		}, {
 			title: '新闻',

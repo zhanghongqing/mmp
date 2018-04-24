@@ -1,0 +1,140 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../../css/common.css" />
+		<style type="text/css">
+			.choose {
+				width: 100%;
+			}
+			
+			.chooseItem {
+				width: 100%;
+				margin: 10px 0;
+			}
+			
+			.chooseItem .label {
+				display: inline-block;
+				width: 25vw;
+				text-align: center;
+				font-size: 14px;
+				color: #666;
+			}
+			
+			.chooseItem .select {
+				display: inline-block;
+				width: 70vw;
+			}
+			
+			.subBtn {
+				text-align: center;
+				margin: 20px;
+			}
+			.mui-card-content{
+				padding: 10px;
+			}
+		</style>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title">藏头诗生成</h1>
+		</header>
+		<div class="mui-content" id="poemContainer">
+			<div class="choose">
+				<div class="chooseItem">
+					<div class="label">分类</div>
+					<div class="select">
+						<select name="" id="num">
+							<option value="5">五言</option>
+							<option value="7" selected="selected">七言</option>
+						</select>
+					</div>
+				</div>
+				<div class="chooseItem">
+					<div class="label">藏字形式</div>
+					<div class="select">
+						<select name="" id="type">
+							<option value="1" selected="selected">藏头</option>
+							<option value="2">藏尾</option>
+							<option value="3">藏中</option>
+							<option value="4">递增</option>
+							<option value="5">递减</option>
+						</select>
+					</div>
+				</div>
+				<div class="chooseItem">
+					<div class="label">押韵类型</div>
+					<div class="select">
+						<select name="" id="yayuntype">
+							<option value="1" selected="selected">双句一压</option>
+							<option value="2">双句押韵</option>
+							<option value="3">一三四压</option>
+						</select>
+					</div>
+				</div>
+				<div class="chooseItem">
+					<div class="label">需藏关键字</div>
+					<div class="select">
+						<input id="key" type="text" placeholder="请输入汉字，最多8个" />
+					</div>
+				</div>
+				<div class="subBtn">
+					<button type="button" class="mui-btn">生成</button>
+				</div>
+				<div id="result">
+					<p style="text-align: center;" v-if="data.length == 0">没有结果，请重新输入其他关键字</p>
+					<div class="poemList" v-else>
+						<div class="mui-card" v-for="(item, index) in data" :key="index">
+							<div class="mui-card-content">
+								{{item}}
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script src="../../js/mui.min.js"></script>
+		<script src="../../js/common.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/util.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/vue.min.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			mui.ready(function() {
+				var vue = new Vue({
+					el: '#result',
+					data: () => ({
+						data: []
+					})
+				})
+				mui.init()
+				mui('.subBtn').on('tap', '.mui-btn', function() {
+					if(document.querySelector('#key').value == '') {
+						mui.alert('请输入关键字')
+						return
+					}
+					util.getApiData('http://route.showapi.com/950-1', {
+						num: document.querySelector('#num option[selected="selected"]').value,
+						type: document.querySelector('#type option[selected="selected"]').value,
+						yayuntype: document.querySelector('#yayuntype option[selected="selected"]').value,
+						key: document.querySelector('#key').value
+					}, function(data) {
+						data = data.showapi_res_body
+						console.log(data)
+						vue.data = data.list
+					}, function(error) {
+						mui.toast('数据获取失败', {
+							duration: 'long',
+							type: 'div'
+						})
+					})
+				})
+			})
+		</script>
+	</body>
+
+</html>

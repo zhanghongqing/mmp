@@ -1,0 +1,141 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../../css/common.css" />
+		<style type="text/css">
+			#gcon {
+				position: relative;
+				width: 100vw;
+				height: 100vh;
+			}
+			
+			#textContainer {
+				position: relative;
+				width: 100%;
+				height: calc(100% - 10vw);
+				overflow: auto;
+				background: url(../../images/readBg.jpg) no-repeat;
+				background-size: 100% 100%;
+			}
+			
+			#textContainer pre {
+				white-space: pre-wrap;
+				padding: 10px;
+				box-sizing: border-box;
+				color: #666;
+			}
+			
+			#pageContainer {
+				width: 100%;
+				height: 10vw;
+				background: #daceb4;
+				overflow: hidden;
+			}
+			#pageContainer .pageItem{
+				min-width: calc(10vw - 8px);
+				max-width: calc(10vw - 8px);
+				height: calc(10vw - 8px);
+				line-height: calc(10vw - 8px);
+				margin: 4px;
+				box-sizing: border-box;
+				border: 1px solid #eee;
+				text-align: center;
+				border-radius: 3px;
+			}
+			#pageContainer .pageItem.active{
+				background: #6e9adf;
+				color: #fff;
+			}
+		</style>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav" style="background: #daceb4;">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title" style="color: #555;">鬼故事</h1>
+		</header>
+		<div class="mui-content" id="gcon">
+			<div id="textContainer" class="mui-scroll-wrapper">
+				<div class="mui-scroll">
+					<!--这里放置真实显示的DOM内容-->
+					<p v-if="loading">加载中。。。</p>
+					<pre v-html="text" v-else></pre>
+				</div>
+			</div>
+			<div id="pageContainer">
+				<div class="pageItem" :class="{'active': curPage == page}" v-for="page in totalPage" :key="page">{{page}}</div>
+			</div>
+		</div>
+		</div>
+		<script src="../../js/common.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/mui.min.js"></script>
+		<script src="../../js/util.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/vue.min.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			mui.ready(function() {
+				mui.back = function() {
+					plus.webview.close('ghostDetail')
+				}
+				mui.init()
+				init()
+			})
+
+			function init() {
+				loadVue()
+			}
+
+			function loadVue() {
+				var vue = new Vue({
+					created() {
+						if(!localStorage.getItem('ghostId')) {
+							mui.toast('数据获取失败', {
+								duration: 'long',
+								type: 'div'
+							})
+							return
+						}
+						document.querySelector('.mui-title').innerHTML = localStorage.getItem('ghostTitle')
+						this.getData()
+					},
+					el: '#gcon',
+					methods: {
+						getData() {
+							let _this = this
+							this.loading = true
+							this.data = []
+							util.getApiData('http://route.showapi.com/955-2', {
+								page: _this.curPage,
+								id: localStorage.getItem('ghostId')
+							}, function(data) {
+								data = data.showapi_res_body
+								_this.text = data.text
+								_this.totalPage = Number(data.allPages)
+								_this.loading = false
+							}, function(error) {
+								mui.toast('数据获取失败', {
+									duration: 'long',
+									type: 'div'
+								})
+							})
+						}
+					},
+					data: () => ({
+						loading: true,
+						text: '',
+						curPage: 1,
+						totalPage: 0
+					}),
+					computed() {
+						
+					}
+				})
+			}
+		</script>
+	</body>
+
+</html>
