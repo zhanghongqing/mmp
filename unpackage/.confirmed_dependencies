@@ -79,7 +79,9 @@
 			"html/joke/jokeIndex.html",
 			"html/joke/sisIndex.html",
 			"html/image/flower.html",
-			"html/article/ghostIndex.html"
+			"html/article/ghostIndex.html",
+			"html/article/poem.html",
+			"html/tool/pm.html"
 		],
 		"resources": []
 	},

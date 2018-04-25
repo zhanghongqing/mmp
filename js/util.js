@@ -66,6 +66,10 @@ var util = {
 				name: '藏头诗生成',
 				icon: '#icon-gushu',
 				url: '/html/article/poem.html'
+			}, {
+				name: 'PM2.5空气质量',
+				icon: '#icon-icon-pm',
+				url: '/html/tool/pm.html'
 			}]
 		}, {
 			title: '新闻',

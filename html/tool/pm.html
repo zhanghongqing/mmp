@@ -1,0 +1,358 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../../css/common.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/mui.picker.css" />
+		<link rel="stylesheet" type="text/css" href="../../css/mui.poppicker.css" />
+		<style type="text/css">
+			.mui-bar-tab .mui-tab-item.mui-active {
+				color: orangered;
+			}
+			
+			.city:before {
+				content: '\e621'
+			}
+			
+			.sort:before {
+				content: '\e694'
+			}
+			
+			.sortList .mui-card .mui-card-content {
+				width: 100%;
+				height: 180px;
+				position: relative;
+			}
+			
+			.sortList .mui-card .mui-card-content .area {
+				font-size: 24px;
+				color: #888;
+				position: absolute;
+				top: 10px;
+				left: 10px;
+				font-weight: bold;
+			}
+			
+			.sortList .mui-card .mui-card-content .quality {
+				position: absolute;
+				top: 10px;
+				right: 10px;
+				font-size: 16px;
+				color: #666;
+			}
+			
+			.sortList .mui-card .mui-card-content .quality span {
+				display: inline-block;
+				padding: 2px 4px;
+				background: #ccc;
+				border-radius: 2px;
+				color: #fff;
+				font-size: 14px;
+			}
+			
+			.sortList .mui-card .mui-card-content .sortNum {
+				position: absolute;
+				bottom: 10px;
+				left: 10px;
+				font-size: 20px;
+				color: #999;
+			}
+			
+			.sortList .mui-card .mui-card-content .infoList {
+				position: absolute;
+				bottom: 10px;
+				right: 10px;
+			}
+			
+			.sortList .mui-card .mui-card-content .infoList {
+				width: 76%;
+				height: 124px;
+				box-shadow: 0 0 10px rgba(0, 0, 0, 0.1) inset;
+				background: #fafafa;
+				padding: 10px;
+				box-sizing: border-box;
+			}
+			
+			.sortList .mui-card .mui-card-content .infoList .infoItem {
+				display: inline-block;
+				float: left;
+				width: 50%;
+				height: 26px;
+				line-height: 26px;
+				color: orangered;
+			}
+			
+			.sortList .mui-card .mui-card-content .infoList .infoItem span {
+				display: inline-block;
+				width: 36%;
+				color: #666;
+			}
+			
+			[v-cloak] {
+				display: none;
+			}
+			
+			.mui-btn {
+				font-size: 16px;
+				padding: 8px;
+				margin: 3px;
+			}
+			
+			h5.mui-content-padded {
+				margin-left: 3px;
+				margin-top: 20px !important;
+			}
+			
+			h5.mui-content-padded:first-child {
+				margin-top: 12px !important;
+			}
+			
+			.ui-alert {
+				text-align: center;
+				padding: 20px 10px;
+				font-size: 16px;
+			}
+			
+			.changeCity {
+				font-size: 16px;
+				font-weight: bold;
+				padding: 6px 10px;
+				line-height: 30px;
+				color: #666;
+			}
+			
+			.changeCity span {
+				margin-left: 14px;
+				color: #e75151;
+				font-weight: normal;
+			}
+			
+			.changeCity span span {
+				margin-left: 4px;
+			}
+			
+			.drop:before {
+				content: '\e6b9';
+			}
+			
+			.infos .aqi {
+				line-height: 40px;
+				padding-left: 10px;
+				color: #666;
+				font-size: 16px;
+			}
+			
+			.infos .aqi span {
+				display: inline-block;
+				padding: 2px 4px;
+				line-height: 20px;
+				background: #ccc;
+				border-radius: 2px;
+				color: #fff;
+				font-size: 14px;
+			}
+			
+			.infos .infoItem {
+				font-size: 3.4vw;
+				color: #999;
+			}
+			
+			.infos .infoItem span {
+				float: right;
+			}
+		</style>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title">空气质量</h1>
+		</header>
+		<nav class="mui-bar mui-bar-tab">
+			<a class="mui-tab-item mui-active" sisType="all">
+				<span class="mui-icon iconfont city"></span>
+				<span class="mui-tab-label">城市</span>
+			</a>
+			<a class="mui-tab-item" sisType="29">
+				<span class="mui-icon iconfont sort"></span>
+				<span class="mui-tab-label">排行</span>
+			</a>
+		</nav>
+		<div id="pmContainer" class="mui-content mui-scroll-wrapper" v-cloak>
+			<div class="mui-scroll">
+				<!--这里放置真实显示的DOM内容-->
+				<div class="cityContainer" v-if="dataType == 'city'">
+					<div class="changeCity">当前城市： {{curCity}}<span @tap="showPiker">切换城市<span class="iconfont drop"></span></span>
+					</div>
+					<div class="infos" v-if="cityData">
+						<div class="aqi">空气质量指数(aqi)： {{cityData.pm.aqi}} <span :style="{'background': getColor(cityData.pm.quality)}">{{cityData.pm.quality}}</span></div>
+						<ul class="mui-table-view">
+							<li class="mui-table-view-cell infoItem">一氧化碳1小时平均<span>{{cityData.pm.co}}mg/m³</span></li>
+							<li class="mui-table-view-cell infoItem">二氧化氮1小时平均<span>{{cityData.pm.no2}}μg/m³</span></li>
+							<li class="mui-table-view-cell infoItem">臭氧1小时平均<span>{{cityData.pm.o3}}μg/m³</span></li>
+							<li class="mui-table-view-cell infoItem">臭氧8小时滑动平均<span>{{cityData.pm.o3_8h}}μg/m³</span></li>
+							<li class="mui-table-view-cell infoItem">颗粒物（粒径小于等于10μm）1小时平均<span>{{cityData.pm.pm2_5}}μg/m³</span></li>
+							<li class="mui-table-view-cell infoItem">颗粒物（粒径小于等于2.5μm）1小时平均<span>{{cityData.pm.pm10}}μg/m³</span></li>
+							<li class="mui-table-view-cell infoItem">二氧化硫一小时平均<span>{{cityData.pm.so2}}μg/m³</span></li>
+						</ul>
+					</div>
+					监测站
+					
+				</div>
+				<div class="sortList" v-if="dataType == 'sort'">
+					<div class="mui-card" v-for="(item, index) in data">
+						<!--页眉，放置标题-->
+						<div class="mui-card-content">
+							<div class="area">{{item.area}}</div>
+							<div class="quality">空气质量：{{item.aqi}} <span :style="{'background': getColor(item.quality)}">{{item.quality}}</span></div>
+							<div class="sortNum">No.{{item.num}}</div>
+							<div class="infoList">
+								<div class="infoItem"><span>SO<sub>2</sub></span>{{item.so2}}μg/m³</div>
+								<div class="infoItem"><span>NO<sub>2</sub></span>{{item.no2}}μg/m³</div>
+								<div class="infoItem"><span>CO</span>{{item.co}}mg/m³</div>
+								<div class="infoItem"><span>O<sub>3</sub></span>{{item.o3}}μg/m³</div>
+								<div class="infoItem"><span>O<sub>3</sub>_8h</span>{{item.o3_8h}}μg/m³</div>
+								<div class="infoItem"><span>PM2.5</span>{{item.pm2_5}}μg/m³</div>
+								<div class="infoItem"><span>PM10</span>{{item.pm10}}μg/m³</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script src="../../js/mui.min.js"></script>
+		<script src="../../js/common.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/util.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/vue.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/city.data-3.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/mui.picker.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/mui.poppicker.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			mui.ready(function() {
+				var cityPicker3 = new mui.PopPicker({
+					layer: 2
+				});
+				cityPicker3.setData(cityData3);
+				////				var showCityPickerButton = document.getElementById('showCityPicker3');
+				////				var cityResult3 = document.getElementById('cityResult3');
+				//				mui('.aaa').on('tap', '.mui-btn', function(event) {
+				//					alert(123)
+				////					cityPicker3.show(function(items) {
+				////						cityResult3.innerText = "你选择的城市是:" + (items[0] || {}).text + " " + (items[1] || {}).text + " " + (items[2] || {}).text;
+				////						//返回 false 可以阻止选择框的关闭
+				////						//return false;
+				////					});
+				//				}, false);
+				var vue = new Vue({
+					el: '#pmContainer',
+					created() {
+						this.getData()
+						this.getCityData()
+					},
+					data: () => ({
+						data: [],
+						dataType: 'city',
+						curCity: '天津',
+						cityData: null
+					}),
+					methods: {
+						showPiker() {
+							let _this = this
+							cityPicker3.show(function(items) {
+								_this.curCity = items[1].text
+								//返回 false 可以阻止选择框的关闭
+								//return false;
+							});
+						},
+						getData() {
+							let _this = this
+							util.getApiData('http://route.showapi.com/104-41', {}, function(data) {
+								data = data.showapi_res_body
+								console.log(data)
+								_this.data = data.list
+							}, function(error) {
+								mui.toast('数据获取失败', {
+									duration: 'long',
+									type: 'div'
+								})
+							})
+						},
+						getCityData() {
+							let _this = this
+							util.getApiData('http://route.showapi.com/104-29', {
+								city: _this.curCity
+							}, function(data) {
+								console.log(data)
+								data = data.showapi_res_body
+								if(data.ret_code == -1) {
+									mui.toast(data.error_info, {
+										duration: 'long',
+										type: 'div'
+									})
+									return
+								}
+								console.log(data)
+								_this.cityData = data
+							}, function(error) {
+								mui.toast('数据获取失败', {
+									duration: 'long',
+									type: 'div'
+								})
+							})
+						},
+						getColor(q) {
+							switch(q) {
+								case '优质':
+									return '#40c057'
+									break
+								case '良好':
+									return '#82c91e'
+									break
+								case '轻度污染':
+									return '#f76707'
+									break
+								case '中度污染':
+									return '#fe0000'
+									break
+								case '重度污染':
+									return '#970454'
+									break
+								case '严重污染':
+									return '#62001e'
+									break
+								default:
+									return '#40c057'
+									break
+							}
+						}
+					},
+					watch: {
+						curCity() {
+							//							mui.alert(JSON.stringify(this.curCity))
+							this.getCityData()
+						}
+					},
+					mounted() {
+						mui('#pmContainer').scroll()
+					}
+				})
+				mui.init()
+				mui.plusReady(function() {
+					plus.geolocation.getCurrentPosition(function(p) {
+						vue.curCity = p.address.city
+					}, function(error) {
+						mui.toast('数据地理位置信息失败,请手动选择', {
+							duration: 'long',
+							type: 'div'
+						})
+					});
+				})
+			})
+		</script>
+	</body>
+
+</html>
