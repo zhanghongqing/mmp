@@ -70,6 +70,14 @@ var util = {
 				name: 'PM2.5空气质量',
 				icon: '#icon-icon-pm',
 				url: '/html/tool/pm.html'
+			}, {
+				name: '历史上的今天',
+				icon: '#icon-lishi',
+				url: '/html/tool/htoday.html'
+			}, {
+				name: '猜一猜',
+				icon: '#icon-jingcai',
+				url: '/html/joke/guess.html'
 			}]
 		}, {
 			title: '新闻',

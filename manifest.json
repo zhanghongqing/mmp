@@ -460,7 +460,9 @@
 					"html/image/flower.html",
 					"html/article/ghostIndex.html",
 					"html/article/poem.html",
-					"html/tool/pm.html"
+					"html/tool/pm.html",
+					"html/tool/htoday.html",
+					"html/joke/guess.html"
 				],
 				"priority": 0
 			},

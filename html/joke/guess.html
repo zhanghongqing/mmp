@@ -1,0 +1,80 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="../../css/common.css" />
+		<style type="text/css">
+			.random:before {
+				content: '\e64a';
+			}
+			
+			.type:before {
+				content: '\e6c0';
+			}
+		</style>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title">猜一猜</h1>
+		</header>
+		<nav class="mui-bar mui-bar-tab" id="tab">
+			<a class="mui-tab-item mui-active" data-type="random">
+				<span class="mui-icon iconfont random"></span>
+				<span class="mui-tab-label">随机</span>
+			</a>
+			<a class="mui-tab-item" data-type="type">
+				<span class="mui-icon iconfont type"></span>
+				<span class="mui-tab-label">类型</span>
+			</a>
+		</nav>
+		<div id="guessContainer" class="mui-content mui-scroll-wrapper">
+			<div class="mui-scroll">
+				<!--这里放置真实显示的DOM内容-->
+				123
+			</div>
+		</div>
+		<script src="../../js/common.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/mui.min.js"></script>
+		<script src="../../js/util.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/vue.min.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			mui.ready(function() {
+				mui.init()
+				var vue = new Vue({
+					el: '#guessContainer',
+					data: () => ({
+						data: null
+					}),
+					created() {
+						this.getData()
+					},
+					methods: {
+						getData() {
+							let _this = this
+							util.getApiData('http://route.showapi.com/151-2', {}, function(data) {
+								data = data.showapi_res_body.pagebean
+								console.log(data)
+								_this.data = data.contentlist
+							}, function(error) {
+								mui.toast('数据获取失败', {
+									duration: 'long',
+									type: 'div'
+								})
+							})
+						}
+					},
+					mounted () {
+						mui('#guessContainer').scroll()
+					}
+				})
+			})
+		</script>
+	</body>
+
+</html>

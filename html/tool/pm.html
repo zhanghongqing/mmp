@@ -164,6 +164,91 @@
 			.infos .infoItem span {
 				float: right;
 			}
+			.siteList{
+				width: 100%;
+				height: 180px;
+				display: flex;
+				flex-direction: row;
+				flex-wrap: nowrap;
+				overflow: auto;
+			}
+			.siteList .siteItem{
+				min-width: calc(100% - 20px);
+				height: 160px;
+				position: relative;
+				background: #fff;
+				margin: 10px;
+				box-sizing: border-box;
+				border-radius: 5px;
+				box-shadow: 0 0 10px rgba(0,0,0,0.2);
+			}
+			.siteList .siteItem .area{
+				position: absolute;
+				top: 10px;
+				left: 10px;
+				font-size: 18px;
+				color: #888;
+				font-weight: bold;
+			}
+			.siteList .siteItem .quality{
+				position: absolute;
+				bottom: 10px;
+				left: 10px;
+				width: 20vw;
+				font-size: 4vw;
+				height: 100px;
+				text-align: center;
+			}
+			.siteList .siteItem .quality .title{
+				font-size: 4vw;
+				line-height: 30px;
+				color: #666;
+			}
+			.siteList .siteItem .quality .num{
+				font-size: 30px;
+				line-height: 40px;
+			}
+			.siteList .siteItem .quality .tag{
+				font-size: 12px;
+				color: #fff;
+				padding: 2px 4px;
+			}
+			.siteList .siteItem .primary{
+				position: absolute;
+				top: 10px;
+				right: 10px;
+				color: #aaa;
+				font-size: 14px;
+			}
+			.siteList .siteItem .infoList{
+				width: 70%;
+				height: 100px;
+				background: rgba(0,0,0,0.04);
+				border-radius: 3px;
+				position: absolute;
+				bottom: 10px;
+				right: 10px;
+				box-shadow: 0 0 4px rgba(0,0,0,0.15);
+			}
+			.siteList .siteItem .infoList .infoItem {
+				display: inline-block;
+				float: left;
+				width: 50%;
+				height: 26px;
+				line-height: 25px;
+				font-size: 12px;
+				text-align: right;
+				box-sizing: border-box;
+				padding: 0 6px;
+			}
+			.siteList .siteItem .infoList .infoItem span{
+				display: inline-block;
+				float: left;
+			}
+			#tab{
+				box-shadow: 0 0 4px rgba(0,0,0,0.2);
+				background: #fff;
+			}
 		</style>
 	</head>
 
@@ -172,12 +257,12 @@
 			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
 			<h1 class="mui-title">空气质量</h1>
 		</header>
-		<nav class="mui-bar mui-bar-tab">
-			<a class="mui-tab-item mui-active" sisType="all">
+		<nav class="mui-bar mui-bar-tab" id="tab">
+			<a class="mui-tab-item mui-active" data-type="city">
 				<span class="mui-icon iconfont city"></span>
 				<span class="mui-tab-label">城市</span>
 			</a>
-			<a class="mui-tab-item" sisType="29">
+			<a class="mui-tab-item" data-type="sort">
 				<span class="mui-icon iconfont sort"></span>
 				<span class="mui-tab-label">排行</span>
 			</a>
@@ -198,13 +283,35 @@
 							<li class="mui-table-view-cell infoItem">颗粒物（粒径小于等于10μm）1小时平均<span>{{cityData.pm.pm2_5}}μg/m³</span></li>
 							<li class="mui-table-view-cell infoItem">颗粒物（粒径小于等于2.5μm）1小时平均<span>{{cityData.pm.pm10}}μg/m³</span></li>
 							<li class="mui-table-view-cell infoItem">二氧化硫一小时平均<span>{{cityData.pm.so2}}μg/m³</span></li>
+							<li class="mui-table-view-cell infoItem">首要污染物<span>{{cityData.pm.primary_pollutant}}</span></li>
 						</ul>
 					</div>
-					监测站
-					
+					<div style="color: #666;font-size: 16px;line-height: 30px;text-indent: 10px;">监测站点信息</div>
+					<div class="siteList" v-if="cityData">
+						<div class="siteItem" v-for="(item, index) in cityData.siteList">
+							<div class="area">{{item.site_name}}</div>
+							<div class="quality">
+								<div class="title">空气质量</div>
+								<div class="num" :style="{'color': getColor(item.quality)}">{{item.aqi}}</div>
+								<span class="tag" :style="{'background': getColor(item.quality)}">
+									{{item.quality}}
+								</span>
+							</div>
+							<div class="primary">首要污染物： {{item.primary_pollutant}}</div>
+							<div class="infoList" :style="{'color': getColor(item.quality)}">
+								<div class="infoItem"><span>SO<sub>2</sub></span>{{item.so2}}μg/m³</div>
+								<div class="infoItem"><span>NO<sub>2</sub></span>{{item.no2}}μg/m³</div>
+								<div class="infoItem"><span>CO</span>{{item.co}}mg/m³</div>
+								<div class="infoItem"><span>O<sub>3</sub></span>{{item.o3}}μg/m³</div>
+								<div class="infoItem"><span>O<sub>3</sub>_8h</span>{{item.o3_8h}}μg/m³</div>
+								<div class="infoItem"><span>PM2.5</span>{{item.pm2_5}}μg/m³</div>
+								<div class="infoItem"><span>PM10</span>{{item.pm10}}μg/m³</div>
+							</div>
+						</div>
+					</div>
 				</div>
 				<div class="sortList" v-if="dataType == 'sort'">
-					<div class="mui-card" v-for="(item, index) in data">
+					<div class="mui-card" v-for="(item, index) in data" @tap="changeCity(item.area)">
 						<!--页眉，放置标题-->
 						<div class="mui-card-content">
 							<div class="area">{{item.area}}</div>
@@ -237,16 +344,6 @@
 					layer: 2
 				});
 				cityPicker3.setData(cityData3);
-				////				var showCityPickerButton = document.getElementById('showCityPicker3');
-				////				var cityResult3 = document.getElementById('cityResult3');
-				//				mui('.aaa').on('tap', '.mui-btn', function(event) {
-				//					alert(123)
-				////					cityPicker3.show(function(items) {
-				////						cityResult3.innerText = "你选择的城市是:" + (items[0] || {}).text + " " + (items[1] || {}).text + " " + (items[2] || {}).text;
-				////						//返回 false 可以阻止选择框的关闭
-				////						//return false;
-				////					});
-				//				}, false);
 				var vue = new Vue({
 					el: '#pmContainer',
 					created() {
@@ -256,7 +353,7 @@
 					data: () => ({
 						data: [],
 						dataType: 'city',
-						curCity: '天津',
+						curCity: '北京',
 						cityData: null
 					}),
 					methods: {
@@ -267,6 +364,10 @@
 								//返回 false 可以阻止选择框的关闭
 								//return false;
 							});
+						},
+						changeCity (city) {
+							this.curCity = city
+							this.dataType = 'city'
 						},
 						getData() {
 							let _this = this
@@ -334,11 +435,21 @@
 						curCity() {
 							//							mui.alert(JSON.stringify(this.curCity))
 							this.getCityData()
+						},
+						dataType () {
+							mui('#pmContainer').scroll().scrollTo(0, 0, 100)
 						}
+					},
+					updated () {
+						mui('#pmContainer').scroll()
 					},
 					mounted() {
 						mui('#pmContainer').scroll()
 					}
+				})
+				mui('.mui-bar').on('tap', '.mui-tab-item', function () {
+					let type = this.getAttribute('data-type')
+					vue.dataType = type
 				})
 				mui.init()
 				mui.plusReady(function() {
