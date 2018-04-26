@@ -15,6 +15,54 @@
 			.type:before {
 				content: '\e6c0';
 			}
+			#tab{
+				box-shadow: 0 0 4px rgba(0,0,0,0.2);
+				background: #fff;
+			}
+			.drop:before{
+				content: '\e6b9';
+				color: skyblue;
+			}
+			.guessList{
+				width: 100%;
+			}
+			.guessList .guessItem{
+				width: 100%;
+				background: #fff;
+				padding: 20px;
+				font-size: 14px;
+			}
+			.guessList .guessItem .mian{
+				color: #666;
+				line-height: 30px;
+			}
+			.guessList .guessItem .mian span{
+				background: skyblue;
+				color: #fff;
+				font-size: 12px;
+				padding: 2px 4px;
+				border-radius: 2px;
+				margin-right: 6px;
+			}
+			.guessList .guessItem .di{
+				width: 100%;
+				padding: 10px;
+				position: relative;
+				line-height: 30px;
+				color: #999;
+			}
+			.guessList .guessItem .di .check{
+				position: absolute;
+				top: 0;
+				left: 0;
+				bottom: 0;
+				right: 0;
+				background: #fff;
+				z-index: 2;
+				line-height: 30px;
+				text-align: center;
+				color: skyblue;
+			}
 		</style>
 	</head>
 
@@ -36,7 +84,17 @@
 		<div id="guessContainer" class="mui-content mui-scroll-wrapper">
 			<div class="mui-scroll">
 				<!--这里放置真实显示的DOM内容-->
-				123
+				<div class="guessList" v-if="dataType == 'random'">
+					<div class="guessItem" v-for="(item, index) in data" :key="index">
+						<div class="mian">
+							<span>{{item.typeName}}</span>{{item.title}}
+						</div>
+						<div class="di">
+							<div class="check">点击查看谜底<span class="iconfont drop"></span></div>
+							{{item.answer}}
+						</div>
+					</div>
+				</div>
 			</div>
 		</div>
 		<script src="../../js/common.js" type="text/javascript" charset="utf-8"></script>
@@ -49,7 +107,8 @@
 				var vue = new Vue({
 					el: '#guessContainer',
 					data: () => ({
-						data: null
+						data: null,
+						dataType: 'random'
 					}),
 					created() {
 						this.getData()
@@ -72,6 +131,9 @@
 					mounted () {
 						mui('#guessContainer').scroll()
 					}
+				})
+				mui('#guessContainer').on('tap', '.check', function () {
+					this.style.display = 'none'
 				})
 			})
 		</script>
